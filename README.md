@@ -69,8 +69,9 @@ You can install from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("coolbutuseless/minisvg")
-devtools::install_github("coolbutuseless/svgpatternusgs")
+devtools::install_github("coolbutuseless/lofi")           # Colour encoding
+devtools::install_github("coolbutuseless/minisvg")        # SVG support
+devtools::install_github("coolbutuseless/svgpatternusgs") # This package
 ```
 
 ## Create and show a pattern
