@@ -1,0 +1,17 @@
+Package: svgpatternusgs
+Type: Package
+Title: USGS SVG Patterns
+Version: 0.1.0
+Author: mikefc
+Maintainer: mikefc <mikefc@coolbutuseless.com>
+Description: SVG patterns from the U.S.G.S.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.99.9001
+Depends:
+    R (>= 2.10)
+Imports:
+    glue,
+    lofi,
+    minisvg
