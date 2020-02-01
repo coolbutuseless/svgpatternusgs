@@ -12,6 +12,9 @@
 `svgpatternusgs` provides SVG patterns from the [United States
 Geological Survey (USGS)](usgs.gov).
 
+For online documentation, see the [svgpatternusgs pkgdown
+website](https://coolbutuseless.github.io/package/svgpatternusgs/index.html).
+
 The USGS provides a large array of reference styles for geologic
 linework and map symbology.
 
