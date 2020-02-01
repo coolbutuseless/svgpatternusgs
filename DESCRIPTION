@@ -9,6 +9,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
+URL: https://coolbutuseless.github.io/package/svgpatternusgs/,https://github.com/coolbutuseless/svgpatternusgs
 Depends:
     R (>= 2.10)
 Imports:
