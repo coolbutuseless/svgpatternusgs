@@ -7,7 +7,13 @@
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Change the size of a pattern
+#' Change the attributes of a pattern
+#'
+#' This function uses hand-crafted regular expressions to replace certain strings
+#' in the given SVG with the values given as arguments.
+#'
+#' This only really works because the SVG text that the USGS was derived from was
+#' relatively regular in layout/naming.
 #'
 #' @param pattern svg text
 #' @param width,height size in pixels
@@ -16,7 +22,6 @@
 #' @param angle angle in degrees
 #'
 #' @return adjusted svg text
-#' @export
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 modify_usgs_pattern <- function(pattern, width, alpha = 1, fill = '#ffffff',
                                 angle = 0, height=width) {

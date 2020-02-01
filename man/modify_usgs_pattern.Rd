@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils-usgs.R
 \name{modify_usgs_pattern}
 \alias{modify_usgs_pattern}
-\title{Change the size of a pattern}
+\title{Change the attributes of a pattern}
 \usage{
 modify_usgs_pattern(
   pattern,
@@ -28,5 +28,10 @@ modify_usgs_pattern(
 adjusted svg text
 }
 \description{
-Change the size of a pattern
+This function uses hand-crafted regular expressions to replace certain strings
+in the given SVG with the values given as arguments.
+}
+\details{
+This only really works because the SVG text that the USGS was derived from was
+relatively regular in layout/naming.
 }

@@ -141,5 +141,5 @@
       </g>
     </pattern>
   </defs>
-  <rect style="fill: url(#usgs-605-ffffff-1-0) #fff;" x="0" y="0" width="100%" height="100%" />
+  <rect x="0" y="0" width="100%" height="100%" style="fill: url(#usgs-605-ffffff-1-0) #fff;" />
 </svg>

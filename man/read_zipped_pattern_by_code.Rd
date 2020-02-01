@@ -13,5 +13,6 @@ read_zipped_pattern_by_code(usgs_code = 601)
 svg pattern object
 }
 \description{
-Read an svg pattern from the zipped file given the USGS code
+This package comes with all SVG stored in a zip file.  This function takes
+a USGS code and extracts that particular SVG from the zip file.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pattern-usgs.R
 \name{create_usgs_pattern}
 \alias{create_usgs_pattern}
-\title{Create usgs pattern}
+\title{Create an SVG pattern from the USGS library}
 \usage{
 create_usgs_pattern(
   usgs_code = 601,
@@ -27,8 +27,34 @@ create_usgs_pattern(
 \item{id}{id to use for pattern. default: NULL means to generate automatically}
 }
 \value{
-character string containing an svg <pattern>
+minisvg::SVGPattern object
 }
 \description{
-Create usgs pattern
+Create an SVG pattern from the USGS library
+}
+\examples{
+\dontrun{
+# Create an SVG document
+library(minisvg)
+doc   <- minisvg::svg_doc()
+
+# Create the pattern and add to the SVG definitions
+my_pattern <- create_usgs_pattern(usgs_code = 601, spacing = 100)
+doc$defs(my_pattern)
+
+# Create a rectangle with the animation
+rect  <- stag$rect(
+  x      = "10\%",
+  y      = "10\%",
+  width  = "80\%",
+  height = "80\%",
+  stroke = 'black',
+  fill   = my_pattern
+)
+
+# Add this rectangle to the document, show the SVG text, then render it
+doc$append(rect)
+doc
+doc$show()
+}
 }

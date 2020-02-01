@@ -22,41 +22,11 @@ suppressPackageStartupMessages({
 
 
 ```{r echo = FALSE, eval = FALSE}
-# Quick logo generation. Borrowed heavily from Nick Tierney's Syn logo process
-library(magick)
-library(showtext)
-font_add_google("Abril Fatface", "gf")
-
-
 # pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/package/svgpatternusgs"))
 ```
 
 
-```{r echo = FALSE, eval = FALSE}
-img <- image_read("man/figures/white.png") 
-
-
-hexSticker::sticker(subplot  = img,
-                    s_x      = 0.92,
-                    s_y      = 1.2,
-                    s_width  = 1.5,
-                    s_height = 0.95,
-                    package  = "svg\npattern\nU.S.G.S.",
-                    p_x      = 1,
-                    p_y      = 1.1,
-                    p_color  = "#223344",
-                    p_family = "gf",
-                    p_size   = 9,
-                    h_size   = 1.2,
-                    h_fill   = "#ffffff",
-                    h_color  = "#223344",
-                    filename = "man/figures/logo.png")
-
-image_read("man/figures/logo.png")
-```
-
-
-# svgpatternusgs   <img src="man/figures/logo.png" align="right" height=230/>
+# svgpatternusgs   <img src="man/figures/logo.svg" align="right" height=230/>
 
 <!-- badges: start -->
 ![](http://img.shields.io/badge/cool-useless-green.svg)
@@ -117,14 +87,8 @@ devtools::install_github("coolbutuseless/svgpatternusgs") # This package
 
 ```{r}
 pattern <- create_usgs_pattern(usgs_code = 605, spacing = 50)
-```
 
-```{r eval = FALSE}
-pattern$show()
-```
-
-
-```{r echo = FALSE}
+# pattern$show()
 pattern$save_full_svg("man/figures/usgs-605.svg", width=400, height = 100)
 ```
 
@@ -134,7 +98,7 @@ pattern$save_full_svg("man/figures/usgs-605.svg", width=400, height = 100)
 
 ### Multiple patterns
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 pattern_list <- svgpatternusgs::all_usgs_codes[41:72] %>%
   purrr::map(create_usgs_pattern, spacing = 200) 
 
@@ -143,71 +107,119 @@ patterns <- minisvg::SVGPatternList_to_svg(pattern_list, width=200, height=100, 
 patterns$save("man/figures/usgs-sample.svg")
 ```
 
-
-
 <img src="man/figures/usgs-sample.svg" />
 
 
 
 
 
-## Encoding/decoding patterns from colours
+## Using the pattern in a `minisvg` SVG document
 
-A key feature of this set of patterns is that they can be encoded in
-an RGB colour.  Also, every RGB colour (excluding black, white and fully transparent)
-can be decoded to a pattern in this library.
-
-This encoding/decoding is carried out by the [`lofi`](https://github.com/coolbutuseless/lofi) package.
-Because this has to squeeze multiple continuous variables in to 24-bits, along with 
-the actual colour of the pattern, there
-will be some quantization associated with a pattern-encoded-as-RGB e.g. angle may
-only be encoded in 45degree increments.
 
 ```{r}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Encode a stripe pattern into a colour. Arguments to set correspond to 
-# arguments from the individual pattern creation function 
-# e.g. `create_stripe_pattern()`
+# Building an SVG logo with an animated stripe
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-hex_colour <- encode_pattern_params_as_hex_colour(
-  usgs_code = 701,
-  spacing   = 200,
-  fill      = '#558899'
-)
-
-hex_colour
+library(minisvg)
+doc <- minisvg::svg_doc(width = 400, height = 200)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Decode this hex colour back into a pattern object
+# Create a simple pattern using the `svgpatternsimple` package
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pattern <- decode_pattern_from_rgba_vec(lofi::hex_colour_to_rgba_vec(hex_colour))
+geopattern1 <- svgpatternusgs::create_usgs_pattern(usgs_code = 601, spacing = 200)
+geopattern2 <- svgpatternusgs::create_usgs_pattern(usgs_code = 655, spacing = 200)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Render the pattern object
+# Add the pattern to the documents list of definitions
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doc <- pattern$as_full_svg(width = 400, height = 100)
+doc$defs(geopattern1, geopattern2)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Create shapes filled with the patterns and add to doc
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rect <- stag$rect(x='10%', y='10%', width='50%', height='50%', stroke = 'black', 
+                  fill=geopattern1)
+
+circle <- stag$circle(cx = "75%", cy="60%", r="45%", stroke = 'black', 
+                      fill=geopattern2)
+
+doc$append(rect, circle)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# output
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# doc$show()
+doc$save("man/figures/README-example-rect.svg")
 ```
+
 
 
 ```{r echo=FALSE, results='asis'}
-cat("<pre><details closed><summary> Show SVG text (click to open) </summary>",
-htmltools::htmlEscape(as.character(doc)), 
-"</details></pre>\n", sep='')
+cat(
+  "<pre>",
+  "<details><summary style='color: #4169E1;'> Show/hide SVG text </summary>",
+  htmltools::htmlEscape(as.character(doc)),
+  "</details>",
+  "</pre>", sep='')
 ```
 
-```{r echo = FALSE, eval=FALSE}
-if (interactive()) {
-  doc$show()
-} 
-doc$save("man/figures/README-encode-as-colour.svg")
+
+<img src = "man/figures/README-example-rect.svg">
+
+
+
+
+## Creating the logo for this package
+
+
+```{r}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Building an SVG logo with an animated stripe
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+library(minisvg)
+logo <- minisvg::svg_doc(width = 200, height = 200)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Create a simple pattern using the `svgpatternsimple` package
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+geopattern <- svgpatternusgs::create_usgs_pattern(usgs_code = 655, spacing = 200)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Add the pattern to the documents list of definitions
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+logo$defs(geopattern)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Create a hexagon filled with this pattern, and add it to the document
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+len     <- 100
+angles  <- (seq(0, 360, 60) + 90) * pi/180
+xs      <- round(len * cos(angles) + 100, 2)
+ys      <- round(len * sin(angles) + 100, 2)
+hex     <- stag$polygon(id = 'hex', xs = xs, ys = ys)
+hex$update(stroke = '#c0c0c0', fill = geopattern)
+logo$append(hex)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# output
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# logo$show()
+logo$save("man/figures/logo.svg")
 ```
 
-<img src="man/figures/README-encode-as-colour.svg" />
 
 
+```{r echo=FALSE, results='asis'}
+cat(
+  "<pre>",
+  "<details><summary style='color: #4169E1;'> Show/hide SVG text </summary>",
+  htmltools::htmlEscape(as.character(logo)),
+  "</details>",
+  "</pre>", sep='')
+```
 
 
-
+<img src = "man/figures/logo.svg">
 
 
 
